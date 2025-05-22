@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block meta %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock %}
+
+    {% block extra_meta %}
+    {% endblock %}
+    {% block extra_js %}
+    {% endblock %}
+    {% block extra_css %}
+    {% endblock %}
+
+    <!-- <meta name="google-site-verification" content="L3hgNdAYMXP5UWVhss3jE-pbZ-m58JlDvSJfJJ9BAuA"/>
+    <meta name="description" content="Bristol Hops Collective is a community of hop growers in Bristol who 
+        collectively grow hops, whether in pots or the ground, on allotments, balconies, gardens. To
+        provide green hops to a local brewery for a uniquely Bristolian brew.">
+    <meta name="keywords" content="Hops, Bristol, community, Grower's Collective, hop plants bristol, easton promise beer, 
+         home grown golden ale, bristol hops collective, bristolhopscollective, commercial beer, Left Handed Giant, New Bristol Brewery, Wiper and True"> -->
+    {% block corejs %}     
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" 
+         integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" 
+         integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+         <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+         <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+         <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+         <script src= "{% static 'js/nav.js' %}"></script>
+         <script src= "{% static 'js/footer.js' %}"></script>
+         <script src= "{% static 'js/scrolltotop.js' %}"></script> 
+
+    {% endblock %}
+
+    {% block corecss %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/scrolltotop.css' %}" type="text/css">
+    {% endblock %}
+
+    <title>{% block extra_title %}{% endblock %} bristolhopscollective.co.uk</title>
+
+    <special-header></special-header>  
+</head>
+<body>
+    <div class="container-fluid"></div>  
+
+    {% if messages %}
+        <div class="messsage-container"></div>
+    {% endif %}
+
+    {% block page_header %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+ 
+<special-footer></special-footer> 
+
+{% block postloadjs %}
+<!--=============================================== Java Script ===================================================-->
+    <!-- <script src="static/js/charts.js"></script> -->
+{% endblock %}
+</body>
+</html>
