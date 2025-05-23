@@ -30,9 +30,9 @@ class User_plant(models.Model):
 
 class Plant_weight(models.Model):
     species = models.ForeignKey(User_plant, on_delete=models.CASCADE,
-                              related_name='weight_entries')
-    weight_kg = models.DecimalField(max_digits=6, decimal_places=2)  # Adjust max_digits and decimal_places as needed
-    timestamp = models.DateTimeField(auto_now_add=True)  # Records when the weight was added
+                                related_name='weight_entries')
+    weight_kg = models.DecimalField(max_digits=6, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.plant.name} - {self.weight}g on\

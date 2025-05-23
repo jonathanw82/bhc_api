@@ -1,12 +1,108 @@
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from .models import User_plant, Plant_weight
-from .forms import Plant_weight_form 
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required, staff_member_required
+from django.urls import reverse
+from .models import Hops_species, User_plant, Plant_weight
+from .forms import Plant_weight_form, User_plant_form, Hops_species_form
+
+
+@staff_member_required
+def add_hop_varieties(request):
+    """ A View to add hops varieties """
+
+    if request.method == 'POST':
+        form = Hops_species_form(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('plant_detail')
+    else:
+        form = Hops_species_form()
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'add_plant.html', context)
+
+
+@staff_member_required
+def admin_update_plant_variety(request, plant_id):
+    """ A view to updating a plant """
+
+    plant = get_object_or_404(Hops_species, pk=plant_id)
+    if request.method == 'POST':
+        form = Hops_species_form(request.POST, instance=plant)
+        if form.is_valid():
+            form.save()
+            return redirect('all_products_admin')
+    else:
+        form = Hops_species_form(instance=plant)
+    context = {
+        'form': form,
+        'plant_id': plant_id,
+    }
+    return render(request, 'update_plant.html', context)
+
+
+@login_required
+def add_plant_to_user(request):
+    """ A view to allow user to select their personal variety """
+
+    plant = Hops_species.objects.all()
+
+    if request.method == 'POST':
+        form = User_plant_form(request.POST)
+        if form.is_valid():
+            new_plant = form.save(commit=False)
+            new_plant.plant = plant
+            new_plant.save()
+            return redirect('plant_detail')
+    else:
+        form = User_plant_form()
+    context = {
+        'form': form,
+        'plant': plant,
+    }
+
+    return render(request, 'add_plant.html', context)
+
+
+@login_required
+def user_update_plant(request, plant_id):
+    """ A view to updating a plant by user """
+
+    plant = get_object_or_404(User_plant, pk=plant_id)
+    if request.method == 'POST':
+        form = User_plant_form(request.POST, instance=plant)
+        if form.is_valid():
+            form.save()
+            return redirect('all_products_admin')
+    else:
+        form = User_plant_form(instance=plant)
+    context = {
+        'form': form,
+        'plant_id': plant_id,
+    }
+    return render(request, 'update_plant.html', context)
+
+
+@login_required
+def user_plant_view(request):
+    """A view for user to see their plants and weights"""
+
+    plant = User_plant.objects.filter(user=request.user)
+    weight = Plant_weight.objects.filter(plant.id, user=request.user)
+    context = {
+        "plant": plant,
+        "weight": weight
+    }
+
+    return render(request, 'view_user_plants.html', context)
 
 
 @login_required
 def add_plant_weight(request, plant_id):
-    plant = get_object_or_404(Plant, id=plant_id, user=request.user)
+    """A view so users can add plant weights to a specific plant """
+
+    plant = get_object_or_404(User_plant, id=plant_id, user=request.user)
 
     if request.method == 'POST':
         form = Plant_weight_form(request.POST)
@@ -14,25 +110,36 @@ def add_plant_weight(request, plant_id):
             weight_entry = form.save(commit=False)
             weight_entry.plant = plant
             weight_entry.save()
-            return redirect('plant_detail', plant_id=plant.id) # Redirect to the plant's detail page
+            return redirect('plant_detail', plant_id=plant.id)
     else:
         form = Plant_weight_form()
+    context = {
+        'form': form,
+        'plant': plant,
+    }
 
-    return render(request, 'add_weight.html', {'form': form, 'plant': plant})
+    return render(request, 'add_weight.html', context)
 
 
 @login_required
-def add_plant_weight(request, plant_id):
-    plant = get_object_or_404(Plant, id=plant_id, user=request.user)
+def all_plants_admin(request):
+    """ A view to all plants admin """
 
-    if request.method == 'POST':
-        form = Plant_weight_form(request.POST)
-        if form.is_valid():
-            weight_entry = form.save(commit=False)
-            weight_entry.plant = plant
-            weight_entry.save()
-            return redirect('plant_detail', plant_id=plant.id) # Redirect to the plant's detail page
-    else:
-        form = Plant_weight_form()
+    plant = Hops_species.objects.all()
+    weight = Plant_weight.objects.all()
+    weight_by_species = weight.filter(Hops_species, plant.id)
+    context = {
+        'plant': plant,
+        'weight': weight,
+        "weight_by_species": weight_by_species,
+    }
+    return render(request, 'products/all_plants_admin.html', context)
 
-    return render(request, 'add_weight.html', {'form': form, 'plant': plant})
+
+@staff_member_required
+def delete(request, plant_id):
+    """ A view to delete hops varieties in admin """
+
+    plant = get_object_or_404(Hops_species, id=plant_id)
+    plant.delete()
+    return redirect(reverse('all_products_admin'))
