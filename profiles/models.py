@@ -11,7 +11,7 @@ class User_Profile(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     membership_number = models.CharField(max_length=15, unique=True,
                                          blank=True, null=True)
-    join_year = models.CharField(max_length=4, unique=True, blank=True,
+    join_year = models.CharField(max_length=4, blank=True,
                                  null=True)
 
     def save(self, *args, **kwargs):
@@ -23,7 +23,7 @@ class User_Profile(models.Model):
     def generate_membership_number(self):
         """Generates a unique membership number."""
         user_count = User_Profile.objects.count()
-        return f"MEM-{user_count + 1:05d}"
+        return f"{user_count + 1:05d}"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

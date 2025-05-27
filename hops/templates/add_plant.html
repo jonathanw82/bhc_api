@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                        <h1>Add Hops</h1>
+                <form class="add_products" method="POST" action="{% url 'add_hop_varieties' %}"enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form| crispy }}
+            
+                    <button class="btn btn-info buttons-click" type="submit" href="{% url 'all_products_admin' %}">Add Hop</button>
+                    <a class="btn btn-info buttons-click"  href="{% url 'all_products_admin' %}">Back</a> 
+                </form>
+            </div> 
+		</div>
+    </div>
+
+{% endblock %}

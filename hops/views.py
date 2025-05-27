@@ -1,45 +1,27 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required, staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from .models import Hops_species, User_plant, Plant_weight
+from .models import Hops_species, Plants_assigned_to_user, Plant_weight
 from .forms import Plant_weight_form, User_plant_form, Hops_species_form
 
 
-@staff_member_required
+@login_required
 def add_hop_varieties(request):
-    """ A View to add hops varieties """
+    """ A view to alow admins to add hops varieties """
 
     if request.method == 'POST':
         form = Hops_species_form(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('plant_detail')
+            return redirect('all_plants_admin')
     else:
         form = Hops_species_form()
     context = {
         'form': form,
     }
 
-    return render(request, 'add_plant.html', context)
+    return render(request, 'hops/add_plant.html', context)
 
-
-@staff_member_required
-def admin_update_plant_variety(request, plant_id):
-    """ A view to updating a plant """
-
-    plant = get_object_or_404(Hops_species, pk=plant_id)
-    if request.method == 'POST':
-        form = Hops_species_form(request.POST, instance=plant)
-        if form.is_valid():
-            form.save()
-            return redirect('all_products_admin')
-    else:
-        form = Hops_species_form(instance=plant)
-    context = {
-        'form': form,
-        'plant_id': plant_id,
-    }
-    return render(request, 'update_plant.html', context)
 
 
 @login_required
@@ -62,7 +44,7 @@ def add_plant_to_user(request):
         'plant': plant,
     }
 
-    return render(request, 'add_plant.html', context)
+    return render(request, 'hops/add_plant.html', context)
 
 
 @login_required
@@ -81,7 +63,7 @@ def user_update_plant(request, plant_id):
         'form': form,
         'plant_id': plant_id,
     }
-    return render(request, 'update_plant.html', context)
+    return render(request, 'hops/update_plant.html', context)
 
 
 @login_required
@@ -95,7 +77,7 @@ def user_plant_view(request):
         "weight": weight
     }
 
-    return render(request, 'view_user_plants.html', context)
+    return render(request, 'hops/user_plants.html', context)
 
 
 @login_required
@@ -118,28 +100,54 @@ def add_plant_weight(request, plant_id):
         'plant': plant,
     }
 
-    return render(request, 'add_weight.html', context)
+    return render(request, 'hops/add_weight.html', context)
+
+
+@login_required
+def view_plant_data(request, plant_id):
+    """ A view to a plants data """
+    plant = get_object_or_404(Hops_species, id=plant_id)
+    context = {
+        "plant": plant,
+    }
+    return render(request, 'view_plant_data.html', context)
 
 
 @login_required
 def all_plants_admin(request):
-    """ A view to all plants admin """
+    """ A view for admins to all plants admin """
 
-    plant = Hops_species.objects.all()
-    weight = Plant_weight.objects.all()
-    weight_by_species = weight.filter(Hops_species, plant.id)
+    all_plants = Hops_species.objects.all()
+
     context = {
-        'plant': plant,
-        'weight': weight,
-        "weight_by_species": weight_by_species,
+        'all_plants': all_plants,
     }
-    return render(request, 'products/all_plants_admin.html', context)
+    return render(request, 'all_plants_admin.html', context)
 
 
-@staff_member_required
+@login_required
+def admin_update_plant_data(request, plant_id):
+    """ A view to updating a plant """
+
+    plant = get_object_or_404(Hops_species, id=plant_id)
+    if request.method == 'POST':
+        form = Hops_species_form(request.POST, instance=plant)
+        if form.is_valid():
+            form.save()
+            return redirect('view_plant_data', plant_id=plant_id)
+    else:
+        form = Hops_species_form(instance=plant)
+    context = {
+        'form': form,
+        'plant_id': plant_id,
+    }
+    return render(request, 'update_plant.html', context)
+
+
+@login_required
 def delete(request, plant_id):
     """ A view to delete hops varieties in admin """
 
     plant = get_object_or_404(Hops_species, id=plant_id)
     plant.delete()
-    return redirect(reverse('all_products_admin'))
+    return redirect(reverse('all_plants_admin'))

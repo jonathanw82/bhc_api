@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+ <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Hop data</h1>
+               
+                    <div>Name: {{plant.name}}</div>
+                    <div>Info: {{plant.description}}</div>
+                    <div>Origin: {{plant.origin}}</div>
+                    <div>Use: {{plant.primary_use}}</div>
+                    <div>Height: {{plant.height}}</div>
+                    <div>Also Known as: {{ plant.also_known_as|default:"No Data" }}</div>
+                    <div>Beer style: {{plant.beer_style_guide}}</div>
+                    <p>Flavors:</p>
+                    <ul>
+                        {% for each_flavor in plant.flavor.all %}
+                            <li>{{ each_flavor.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% if request.user.is_staff %}
+                        <a href="{% url 'admin_update_plant_data' plant.id %}">Edit Plant</a>
+                         <a class="btn btn-warning" href="{% url 'delete' plant.id %}">Delete</a>
+                    {% endif %}
+                    
+            </div> 
+		</div>
+    </div>
+
+{% endblock%}

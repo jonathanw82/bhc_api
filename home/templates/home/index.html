@@ -5,6 +5,10 @@
 <div class="container">
     <div class="row">
         <h1>Welcome to BHC members area {{ request.user.username|title }} </h1>
+        <div>{% if request.user.is_staff %}
+             <a class="text-info" href="{% url 'all_plants_admin' %}">Show all plants</a>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

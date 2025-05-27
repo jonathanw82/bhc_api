@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %} 
+{% block extra_css %}
+  
+{% endblock %}
+
+{% block content %}
+
+ <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                    <div class="title-edit-page">
+                        <h1>Hello {{ request.user.username|title }} Your plants and weights</h1>
+                    </div>
+                    {% for plants in plant %}
+                    <div>{{plants.species}}</div>
+                        {% for weights in weight %}
+                            {% if plants.species  ==  plants.species %}
+                                <span>{{weights.weight_kg}} {{weights.timestamp}}</span>
+                            {% endif %}
+                    {% endfor %}
+                
+            </div> 
+		</div>
+    </div>
+
+
+{% endblock %}

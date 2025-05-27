@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>All hop varieties grown by Bristol Hops Collective</h1>
+                <div>
+                    {% for plant in all_plants %}
+                        <li>{{plant.name}} <a href="{% url 'view_plant_data' plant.id %}">view</a></li>
+                    {% endfor %}
+                </div>
+            </div> 
+		</div>
+    </div>
+
+{% endblock %}
